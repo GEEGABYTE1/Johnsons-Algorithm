@@ -50,7 +50,7 @@ test.add_edge(one, two, 1)
 test.add_edge(two, three, 4) 
 test.add_edge(three, one, -2)
 test.add_edge(three, four, 8)
-test.add_edge(four, two, 6)
+test.add_edge(four, two, -4)
 test.add_edge(four, five, 5)
 
 
@@ -59,10 +59,27 @@ test.add_edge(four, five, 5)
 
 graph = {}
 
+summation_factor = 0
+
 for vertex, neighbour in test.graph_dict.items():
-    lst = []
     edges = neighbour.edges 
     for secondary_neighbour, weight in edges.items():
-        lst.append((secondary_neighbour, weight))
-    graph[vertex] = lst 
+        if weight < 0:
+            if summation_factor == 0:                                           # Computing Negative Edges using Johnson's Algorithm Definition
+                summation_factor = -1 * weight
+            elif summation_factor <  weight * -1:
+                difference_factor = weight * -1 - summation_factor
+                summation_factor += difference_factor
+            else:
+                continue 
 
+
+
+for vertex, edge in test.graph_dict.items():
+    lst = [] 
+    edges = edge.edges 
+    for neighbour, weight in edges.items():
+        updated_weight = weight + summation_factor
+        lst.append((neighbour, updated_weight))
+    
+    graph[vertex] = lst 
